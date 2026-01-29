@@ -70,7 +70,7 @@ job-market-pipeline/
 
 The pipeline uses PostgreSQL with a \*\*raw ingestion table\*\*:
 
-### `raw\_job\_postings`
+### `raw_job_postings`
 
 This table stores unprocessed job data exactly as collected.
 
@@ -78,17 +78,17 @@ Columns:
 
 - `source` – job site identifier (e.g. indeed_de)
 
-- `job\_id` – raw job ID from the source
+- `job_id` – raw job ID from the source
 
-- `job\_url` – URL of the job posting
+- `job_url` – URL of the job posting
 
-- `raw\_html` – raw HTML of the job page
+- `raw_html` – raw HTML of the job page
 
 - `payload` – JSONB metadata (query, location, etc.)
 
-- `scraped\_at` – timestamp (auto-generated)
+- `scraped_at` – timestamp (auto-generated)
 
-A unique constraint on `(job\_id, source)` ensures idempotent inserts.
+A unique constraint on `(job_id, source)` ensures idempotent inserts.
 
 ---
 
@@ -96,7 +96,7 @@ A unique constraint on `(job\_id, source)` ensures idempotent inserts.
 
 ### 1. Clone the repository
 
-git clone <repo-url>
+git clone <[text](https://github.com/gnandkhedkar7/job-market-pipeline.git)>
 
 cd job-market-pipeline
 
