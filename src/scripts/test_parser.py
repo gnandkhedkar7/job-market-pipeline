@@ -1,26 +1,26 @@
 from sqlalchemy import text
 from src.db.db import engine
-from src.parser.indeed_parser import extract_title
+from src.parser.indeed_parser import extract_page_title
+from src.parser.indeed_parser import extract_job_titles
 
 with engine.connect() as conn:
     row = conn.execute(
         text("""
         SELECT raw_html, job_url
         FROM raw_job_postings
-        LIMIT 1
-    """)
+        WHERE job_id = 'sample-1'
+        """)
     ).fetchone()
-
 
 raw_html, job_url = row
 
 print("Job URL:", job_url)
-print("Raw HTML length:", len(raw_html) if raw_html else None)
+print("Raw HTML length:", len(raw_html))
 
-# VERY IMPORTANT: inspect the HTML
-print("\n--- HTML PREVIEW (first 500 chars) ---\n")
-print(raw_html[:500])
+page_title = extract_page_title(raw_html)
+print("Page <title>:", page_title)
 
-title = extract_title(raw_html)
-
-print("Extracted title:", title)
+titles = extract_job_titles(raw_html)
+print(f"Found {len(titles)} job titles:")
+for t in titles[:5]:
+    print("-", t)
