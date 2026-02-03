@@ -156,6 +156,12 @@ Minimal magic: SQLAlchemy Core instead of heavy ORM
 
 Incremental development: validate each layer before adding complexity
 
+## Analytics Pipeline
+
+Build daily skill demand:
+python -m src.analytics.build_daily_skill_counts
+
+
 ## Next Steps
 
 Planned additions:
