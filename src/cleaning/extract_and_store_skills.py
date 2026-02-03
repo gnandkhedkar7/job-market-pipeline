@@ -85,6 +85,9 @@ def extract_and_store_skills():
         f"Total skills inserted: {total_skills_inserted}"
     )
 
+def main():
+    extract_and_store_skills()
+
 
 if __name__ == "__main__":
-    extract_and_store_skills()
+    main()

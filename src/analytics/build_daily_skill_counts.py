@@ -13,7 +13,12 @@ ON CONFLICT (skill, date)
 DO UPDATE SET job_count = EXCLUDED.job_count;
 """)
 
-with engine.begin() as conn:
-    conn.execute(QUERY)
+def main():
+    
+    with engine.begin() as conn:
+        conn.execute(QUERY)
 
-print("daily_skill_counts updated")
+    print("daily_skill_counts updated")
+
+if __name__ == "__main__":
+    main()

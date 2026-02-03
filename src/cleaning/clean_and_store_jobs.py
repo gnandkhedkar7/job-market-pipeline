@@ -76,6 +76,9 @@ def clean_and_store_jobs():
             conn.execute(text(INSERT_CLEAN_SQL), params)
 
     print("Clean job postings inserted.")
+    
+def main():
+    clean_and_store_jobs()
 
 
 if __name__ == "__main__":
