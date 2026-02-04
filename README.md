@@ -48,6 +48,8 @@ Each stage persists its output to PostgreSQL, enabling easy debugging, replay, a
 
 ## 📂 Project Structure
 
+```text
+
 .
 ├── db/
 │ ├── init.sql # Database schema (sourceof truth)
@@ -66,6 +68,7 @@ Each stage persists its output to PostgreSQL, enabling easy debugging, replay, a
 ├── .env # Not committed
 ├── .gitignore
 └── README.md
+```
 
 ---
 
