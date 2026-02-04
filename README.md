@@ -32,7 +32,6 @@ job_skills
 ↓
 daily_skill_counts
 
-
 Each stage persists its output to PostgreSQL, enabling easy debugging, replay, and auditing.
 
 ---
@@ -49,10 +48,9 @@ Each stage persists its output to PostgreSQL, enabling easy debugging, replay, a
 
 ## 📂 Project Structure
 
-$ tree
-
+.
 ├── db/
-│ ├── init.sql # Database schema (source of truth)
+│ ├── init.sql # Database schema (sourceof truth)
 │ └── analytics.sql # Analytics queries
 ├── src/
 │ ├── analytics/ # Analysis logic
@@ -65,10 +63,9 @@ $ tree
 ├── docker-compose.yml
 ├── Dockerfile
 ├── requirements.txt
-├── .env # Not commited
+├── .env # Not committed
 ├── .gitignore
 └── README.md
-
 
 ---
 
@@ -93,4 +90,78 @@ docker compose up -d
 ```
 
 ### 2️⃣ Load sample HTML (for testing)
+
+```bash
 docker compose run pipeline python -m src.scripts.load_sample_html
+```
+
+### 3️⃣ Run the full pipeline
+
+```bash
+docker compose run pipeline
+```
+
+The pipeline will: 1. Parse jobs 2. Clean and normalize titles 3. Extract skills 4. Update daily skill analytics
+
+## 🔍 Inspecting the Database
+
+```bash
+docker exec -it job_pipeline_postgres psql -U pipeline_user -d job_pipeline
+```
+
+Example checks
+
+```bash
+SELECT COUNT(*) FROM clean_job_postings;
+SELECT COUNT(*) FROM job_skills;
+SELECT * FROM daily_skill_counts ORDER BY date DESC, job_count DESC;
+```
+
+## 📊 Example Analytics
+
+Top skills (latest day):
+
+```bash
+SELECT *
+FROM daily_skill_counts
+ORDER BY date DESC, job_count DESC
+LIMIT 10;
+```
+
+## 🧪 Data Quality Handling
+
+    * Titles are normalized using rule-based logic
+    * Jobs with missing or invalid titles are explicitly dropped
+    * Drop reasons are stored (missing_title, title_too_short, etc.)
+    * Jobs with zero extracted skills are logged
+
+## 🔁 Reproducibility
+
+The database schema is fully defined in db/init.sql.
+
+To reset everything from scratch:
+
+```bash
+docker compose down -v
+docker compose up --build
+```
+
+## 📌 Design Principles
+
+    * Explicit data states (raw → parsed → clean)
+    * No silent failures
+    * SQL-first analytics
+    * Simple, explainable logic over premature ML
+
+## 🔮 Future Extensions (Optional)
+
+    * Scheduled runs (cron / Prefect)
+    * Streamlit dashboard
+    * Skill trend detection
+    * Role clustering using TF-IDF
+
+## 👤 Author
+
+**Gauri Nandkhedkar**  
+GitHub: [@gauri-nandkhedkar](https://github.com/gauri-nandkhedkar)  
+LinkedIn: [@gauri-nandkhedkar](https://www.linkedin.com/in/gauri-nandkhedkar/)
