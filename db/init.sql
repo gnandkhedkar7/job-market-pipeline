@@ -36,3 +36,22 @@ CREATE TABLE IF NOT EXISTS job_skills (
     scraped_at TIMESTAMPTZ,
     PRIMARY KEY (job_id, source, skill)
 );
+
+CREATE TABLE IF NOT EXISTS clean_job_postings (
+    clean_job_id SERIAL PRIMARY KEY,
+    source TEXT NOT NULL,
+    job_id TEXT NOT NULL,
+
+    raw_title TEXT,
+    normalized_title TEXT,
+
+    company TEXT,
+    location TEXT,
+
+    scraped_at TIMESTAMPTZ,
+
+    is_dropped BOOLEAN NOT NULL DEFAULT FALSE,
+    drop_reason TEXT,
+
+    UNIQUE (job_id, source)
+);
