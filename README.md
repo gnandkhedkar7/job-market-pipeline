@@ -1,179 +1,96 @@
-# Job Market Pipeline
+# Job Market Data Pipeline
 
-A local, Docker-based data ingestion pipeline for collecting and storing raw job postings data.
+An end-to-end, containerized data pipeline that scrapes real-world job postings, cleans and normalizes noisy data, extracts in-demand skills, and produces daily skill-demand analytics using PostgreSQL.
 
-This project is designed as a foundation for a job market analysis pipeline, with a strong focus on:
-
-- reproducible local setup
-
-- clean separation of concerns
-
-- raw data preservation for future parsing and analytics
+This project is designed to demonstrate real-world data engineering practices: resilient ingestion, structured transformations, explicit data quality handling, and reproducible automation.
 
 ---
 
-## Project Status
+## 🚀 Features
 
-\*\*Current state:\*\*
-
-- ✅ Python environment set up (`.venv`)
-
-- ✅ PostgreSQL running via Docker Compose
-
-- ✅ Database schema initialized
-
-- ✅ Python → Database ingestion verified end-to-end
-
-Scraping and parsing logic will be added incrementally on top of this foundation.
+- Scrape and store raw HTML job postings
+- Parse job listings from search result pages
+- Normalize job titles and explicitly handle dropped records
+- Extract skills from job descriptions
+- Generate daily skill-demand analytics
+- Fully automated using Docker Compose
+- Idempotent and restart-safe pipeline
 
 ---
 
-## Project Structure
+## 🏗️ Architecture Overview
 
-job-market-pipeline/
+Raw HTML
+↓
+raw_job_postings
+↓
+parsed_job_postings
+↓
+clean_job_postings
+↓
+job_skills
+↓
+daily_skill_counts
 
-├── src/
 
-│ ├── db/
+Each stage persists its output to PostgreSQL, enabling easy debugging, replay, and auditing.
 
-│ │ └── db.py # Database helper (SQLAlchemy Core)
+---
 
-│ ├── scraper/ # (planned) job site scrapers
+## 🧱 Tech Stack
 
-│ └── scripts/
+- **Python 3.12**
+- **PostgreSQL 15**
+- **SQLAlchemy**
+- **BeautifulSoup**
+- **Docker & Docker Compose**
 
-│ └── test_db.py # DB ingestion smoke test
+---
 
-│
+## 📂 Project Structure
+
+$ tree
 
 ├── db/
-
-│ └── init.sql # Database schema initialization
-
-│
-
-├── docker-compose.yml # PostgreSQL via Docker
-
-├── requirements.txt # Python dependencies
-
-├── README.md
-
+│ ├── init.sql # Database schema (source of truth)
+│ └── analytics.sql # Analytics queries
+├── src/
+│ ├── analytics/ # Analysis logic
+│ ├── db/ # Database utilities
+│ ├── parser/ # HTML parsing logic
+│ ├── cleaning/ # Normalization & skill extraction
+│ ├── samples/ # Sample HTML data
+│ ├── scraper/ # Scraper logic
+│ └── scripts/ # Pipeline orchestration
+├── docker-compose.yml
+├── Dockerfile
+├── requirements.txt
+├── .env # Not commited
 ├── .gitignore
+└── README.md
 
-├── .env # Environment variables (not committed)
-
-└── .venv/ # Python virtual environment (not committed)
 
 ---
 
-## Database Design
+## 🗄️ Database Tables
 
-The pipeline uses PostgreSQL with a \*\*raw ingestion table\*\*:
+### Core Tables
 
-### `raw_job_postings`
-
-This table stores unprocessed job data exactly as collected.
-
-Columns:
-
-- `source` – job site identifier (e.g. indeed_de)
-
-- `job_id` – raw job ID from the source
-
-- `job_url` – URL of the job posting
-
-- `raw_html` – raw HTML of the job page
-
-- `payload` – JSONB metadata (query, location, etc.)
-
-- `scraped_at` – timestamp (auto-generated)
-
-A unique constraint on `(job_id, source)` ensures idempotent inserts.
+- `raw_job_postings` — raw HTML snapshots
+- `parsed_job_postings` — extracted job metadata
+- `clean_job_postings` — normalized titles with drop flags
+- `job_skills` — exploded skills per job
+- `daily_skill_counts` — aggregated analytics
 
 ---
 
-## Local Setup
+## ▶️ How to Run the Pipeline
 
-### 1. Clone the repository
+### 1️⃣ Start services
 
-git clone <[text](https://github.com/gnandkhedkar7/job-market-pipeline.git)>
-
-cd job-market-pipeline
-
-### 2. Create and activate virtual environment
-
-python -m venv .venv
-
-# Windows (PowerShell)
-
-.\\.venv\\Scripts\\Activate.ps1
-
-### 3. Install Python dependencies
-
-python -m pip install -r requirements.txt
-
-#### 4. Create .env file (not committed)
-
-POSTGRES_USER=pipeline_user
-
-POSTGRES_PASSWORD=pipeline_pass
-
-POSTGRES_DB=job_pipeline
-
-POSTGRES_HOST=localhost
-
-POSTGRES_PORT=5432
-
-Start PostgreSQL with Docker
-
+```bash
 docker compose up -d
+```
 
-Verify that Postgres is running:
-
-docker ps
-
-Verifying the Database Connection
-
-A simple ingestion test script is provided.
-
-Run:
-
-python -m src.scripts.test_db
-
-Verify the inserted row directly in Postgres:
-
-docker exec -it job_pipeline_postgres psql -U pipeline_user -d job_pipeline
-
-SELECT \* FROM raw_job_postings;
-
-Design Philosophy
-
-Raw-first ingestion: store unmodified data before parsing
-
-Dockerized infrastructure: consistent local setup
-
-Minimal magic: SQLAlchemy Core instead of heavy ORM
-
-Incremental development: validate each layer before adding complexity
-
-## Analytics Pipeline
-
-Build daily skill demand:
-python -m src.analytics.build_daily_skill_counts
-
-
-## Next Steps
-
-Planned additions:
-
-Job site scrapers (Indeed, etc.)
-
-Retry and backoff logic
-
-Structured parsing tables
-
-Analytics and reporting layer
-
-## NEXT:
-- Wire scraper into Docker so raw_job_postings is populated
-- Or seed raw_job_postings for demo analytics
+### 2️⃣ Load sample HTML (for testing)
+docker compose run pipeline python -m src.scripts.load_sample_html
