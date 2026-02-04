@@ -20,3 +20,19 @@ CREATE TABLE IF NOT EXISTS parsed_job_postings (
   scraped_at TIMESTAMP WITH TIME ZONE,
   PRIMARY KEY (job_id, source)
 );
+
+CREATE TABLE IF NOT EXISTS daily_skill_counts (
+  skill TEXT NOT NULL,
+  date DATE NOT NULL,
+  job_count INTEGER NOT NULL,
+  PRIMARY KEY (skill, date)
+);
+
+CREATE TABLE IF NOT EXISTS job_skills (
+    job_id TEXT NOT NULL,
+    source TEXT NOT NULL,
+    skill TEXT NOT NULL,
+    extracted_from TEXT,
+    scraped_at TIMESTAMPTZ,
+    PRIMARY KEY (job_id, source, skill)
+);

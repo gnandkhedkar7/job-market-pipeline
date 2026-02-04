@@ -173,3 +173,7 @@ Retry and backoff logic
 Structured parsing tables
 
 Analytics and reporting layer
+
+## NEXT:
+- Wire scraper into Docker so raw_job_postings is populated
+- Or seed raw_job_postings for demo analytics

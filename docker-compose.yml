@@ -9,8 +9,20 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./db/analytics.sql:/docker-entrypoint-initdb.d/analytics.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      retries: 5
 
+  pipeline:
+    build: .
+    container_name: job_pipeline_runner
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    restart: "no"
 
 volumes:
   pgdata:
