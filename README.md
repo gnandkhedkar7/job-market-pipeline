@@ -20,19 +20,37 @@ This project is designed to demonstrate real-world data engineering practices: r
 
 ## 🏗️ Architecture Overview
 
-Raw HTML
-↓
+```text
+
+.
+Scraper (Playwright)
+        ↓
 raw_job_postings
-↓
+        ↓
+Parser
+        ↓
 parsed_job_postings
-↓
+        ↓
+Cleaner
+        ↓
 clean_job_postings
-↓
+        ↓
+Skill Extractor
+        ↓
 job_skills
-↓
+        ↓
 daily_skill_counts
 
+```
+
 Each stage persists its output to PostgreSQL, enabling easy debugging, replay, and auditing.
+
+---
+
+## Data Source
+
+- **Arbeitnow (public job boards for jobs in Germany)**
+- **Scraped using Playwright (headless Chromium)**
 
 ---
 
@@ -41,6 +59,7 @@ Each stage persists its output to PostgreSQL, enabling easy debugging, replay, a
 - **Python 3.12**
 - **PostgreSQL 15**
 - **SQLAlchemy**
+- **Playwright**
 - **BeautifulSoup**
 - **Docker & Docker Compose**
 
@@ -59,7 +78,7 @@ Each stage persists its output to PostgreSQL, enabling easy debugging, replay, a
 │ ├── db/ # Database utilities
 │ ├── parser/ # HTML parsing logic
 │ ├── cleaning/ # Normalization & skill extraction
-│ ├── samples/ # Sample HTML data
+│ ├── experiments/ # Non-production experiments
 │ ├── scraper/ # Scraper logic
 │ └── scripts/ # Pipeline orchestration
 ├── docker-compose.yml
@@ -82,6 +101,8 @@ Each stage persists its output to PostgreSQL, enabling easy debugging, replay, a
 - `job_skills` — exploded skills per job
 - `daily_skill_counts` — aggregated analytics
 
+All tables are created in **`db/init.sql`**.
+
 ---
 
 ## ▶️ How to Run the Pipeline
@@ -89,13 +110,13 @@ Each stage persists its output to PostgreSQL, enabling easy debugging, replay, a
 ### 1️⃣ Start services
 
 ```bash
-docker compose up -d
+docker compose up --build
 ```
 
-### 2️⃣ Load sample HTML (for testing)
+### 2️⃣ Run scraper manually
 
 ```bash
-docker compose run pipeline python -m src.scripts.load_sample_html
+docker compose run pipeline python -m src.scraper.arbeitnow_scraper
 ```
 
 ### 3️⃣ Run the full pipeline
@@ -155,6 +176,11 @@ docker compose up --build
     * No silent failures
     * SQL-first analytics
     * Simple, explainable logic over premature ML
+
+## Project Status
+    
+    * ✅ v1 complete
+    * 🔜 v2: additional job boards, trend analysis, optional dashboard
 
 ## 🔮 Future Extensions (Optional)
 

@@ -1,3 +1,7 @@
+# Experimental HTTP client used during scraping exploration attempts (Indeed)
+# Not used in v1 pipeline
+
+
 import time
 import random
 import requests

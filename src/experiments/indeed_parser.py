@@ -1,3 +1,6 @@
+# Deprecated: initial exploration with Indeed
+# Not used in v1 pipeline
+
 from bs4 import BeautifulSoup
 
 def extract_page_title(raw_html: str) -> str | None:

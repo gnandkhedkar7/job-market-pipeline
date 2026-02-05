@@ -1,6 +1,9 @@
+# Deprecated: initial exploration with Indeed
+# Not used in v1 pipeline
+
 from sqlalchemy import text
 from src.db.db import engine
-from src.parser.indeed_parser import extract_job_cards, extract_page_title
+from src.experiments.indeed_parser import extract_job_cards, extract_page_title
 
 with engine.connect() as conn:
     row = conn.execute(

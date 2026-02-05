@@ -1,6 +1,6 @@
 from sqlalchemy import text
 from src.db.db import engine, insert_parsed_job
-from src.parser.indeed_parser import extract_job_cards
+from src.experiments.indeed_parser import extract_job_cards
 
 SOURCE = "indeed_de"
 

@@ -1,6 +1,9 @@
+# Deprecated: initial exploration with Indeed
+# Not used in v1 pipeline
+
 from datetime import datetime, timezone
 from sqlalchemy import text
-from src.scraper.http_client import HttpClient
+from src.experiments.http_client import HttpClient
 from src.db.db import engine
 
 BASE_URL = "https://de.indeed.com"
@@ -23,6 +26,7 @@ VALUES (
 )
 ON CONFLICT (job_id, source) DO NOTHING
 """
+
 
 class IndeedScraper:
     def __init__(self):

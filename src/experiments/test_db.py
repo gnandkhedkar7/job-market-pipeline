@@ -1,3 +1,6 @@
+# Deprecated: initial exploration with Indeed
+# Not used in v1 pipeline
+
 from src.db.db import insert_raw_posting
 
 insert_raw_posting(
