@@ -1,4 +1,8 @@
-from src.scraper.indeed_scraper import scrape_and_store
+from src.scraper.indeed_scraper import IndeedScraper
 
 if __name__ == "__main__":
-    scrape_and_store(query="data engineer", location="Freising")
+    scraper = IndeedScraper()
+    scraper.scrape_search_page(
+        query="data engineer",
+        location="München"
+    )

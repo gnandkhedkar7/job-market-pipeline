@@ -16,6 +16,8 @@ services:
 
   pipeline:
     build: .
+    environment:
+      - PYTHONPATH=/app/src
     container_name: job_pipeline_runner
     depends_on:
       postgres:
